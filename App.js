@@ -36,19 +36,21 @@ const App = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text>{item.value}</Text>
+        <Text style={isCheckbox ? styles.done : null}>{item.value}</Text>
 
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Checkbox
             value={isCheckbox}
             onValueChange={setCheckbox}
             color={isCheckbox ? "red" : null}
+            style={{ paddingHorizontal: 11, paddingVertical: 11 }}
           />
           <TouchableOpacity
             style={{
               backgroundColor: "red",
               padding: 5,
-              paddingHorizontal: 10,
+              paddingHorizontal: 9,
+              marginLeft: 10,
             }}
             // onPress={() => handleModal(item.id)}
           >
@@ -103,6 +105,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     justifyContent: "space-between",
     marginHorizontal: 20,
+  },
+  done: {
+    textDecorationLine: "line-through",
   },
 });
 

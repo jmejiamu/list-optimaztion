@@ -8,9 +8,16 @@ import {
   FlatList,
   TouchableOpacity,
   Button,
-  Modal,
+  // Modal,
 } from "react-native";
-import { Header, CostumeButton, CostumeInput } from "./src/components/index";
+import {
+  Header,
+  CostumeButton,
+  CostumeInput,
+  RenderItems,
+  ListHeaderComponent,
+  Modal,
+} from "./src/components/index";
 
 const App = () => {
   const [task, setTask] = useState();
@@ -43,46 +50,11 @@ const App = () => {
   };
 
   const renderItem = ({ item }) => {
-    return (
-      <View
-        style={{
-          marginHorizontal: 20,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginVertical: 10,
-        }}
-      >
-        <Text style={styles.item}>{item.value}</Text>
-
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "red",
-              padding: 5,
-              paddingHorizontal: 9,
-              marginLeft: 10,
-              borderRadius: 15,
-            }}
-            onPress={() => handleModal(item.id)}
-          >
-            <Text style={styles.deleteBtn}>X</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
+    return <RenderItems item={item} handleModal={handleModal} />;
   };
 
   const ListHeader = () => {
-    return (
-      <View style={{ marginHorizontal: 20, marginTop: 20 }}>
-        {item.length === 0 ? (
-          <Text style={{ fontWeight: "bold" }}>There is not Items yet</Text>
-        ) : (
-          <Text style={{ fontWeight: "bold" }}>List</Text>
-        )}
-      </View>
-    );
+    return <ListHeaderComponent item={item} />;
   };
 
   return (
@@ -156,10 +128,7 @@ const styles = StyleSheet.create({
   done: {
     textDecorationLine: "line-through",
   },
-  item: {
-    fontSize: 14,
-    color: "#212121",
-  },
+
   modalView: {
     margin: 20,
     backgroundColor: "white",
@@ -181,10 +150,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 22,
     marginVertical: 100,
-  },
-  deleteBtn: {
-    color: "white",
-    fontWeight: "bold",
   },
 });
 

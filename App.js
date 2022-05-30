@@ -7,13 +7,16 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  Button,
+  Modal,
 } from "react-native";
 import { Header, CostumeButton, CostumeInput } from "./src/components/index";
 
 const App = () => {
   const [task, setTask] = useState();
   const [item, setItem] = useState([]);
-  const [isCheckbox, setCheckbox] = useState(false);
+  const [modalVisibility, setModalVisibility] = useState(false);
+  const [itemSelected, setItemSelected] = useState();
   const onHandleInput = (text) => {
     setTask(text);
   };
@@ -26,6 +29,19 @@ const App = () => {
     ]);
   };
 
+  const handleModal = (id) => {
+    setItemSelected(item.filter((item) => item.id === id)[0]);
+    setModalVisibility(!modalVisibility);
+  };
+
+  const onHandleDelete = (itemSelected) => {
+    setItem((currentItems) =>
+      currentItems.filter((item) => item.id !== itemSelected.id)
+    );
+    setItemSelected({});
+    setModalVisibility(!modalVisibility);
+  };
+
   const renderItem = ({ item }) => {
     return (
       <View
@@ -34,25 +50,21 @@ const App = () => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
+          marginVertical: 10,
         }}
       >
-        <Text style={isCheckbox ? styles.done : null}>{item.value}</Text>
+        <Text style={styles.item}>{item.value}</Text>
 
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Checkbox
-            value={isCheckbox}
-            onValueChange={setCheckbox}
-            color={isCheckbox ? "red" : null}
-            style={{ paddingHorizontal: 11, paddingVertical: 11 }}
-          />
           <TouchableOpacity
             style={{
               backgroundColor: "red",
               padding: 5,
               paddingHorizontal: 9,
               marginLeft: 10,
+              borderRadius: 15,
             }}
-            // onPress={() => handleModal(item.id)}
+            onPress={() => handleModal(item.id)}
           >
             <Text style={styles.deleteBtn}>X</Text>
           </TouchableOpacity>
@@ -63,8 +75,12 @@ const App = () => {
 
   const ListHeader = () => {
     return (
-      <View style={{ marginHorizontal: 20 }}>
-        <Text style={{ fontWeight: "bold" }}>List</Text>
+      <View style={{ marginHorizontal: 20, marginTop: 20 }}>
+        {item.length === 0 ? (
+          <Text style={{ fontWeight: "bold" }}>There is not Items yet</Text>
+        ) : (
+          <Text style={{ fontWeight: "bold" }}>List</Text>
+        )}
       </View>
     );
   };
@@ -83,14 +99,41 @@ const App = () => {
           text="Add"
           style={{ width: "25%" }}
           onPress={onHandleSubmit}
+          disabled={task?.length === 0}
         />
       </View>
       <FlatList
         ListHeaderComponent={ListHeader}
         data={item}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString}
+        keyExtractor={(item) => item.id.toString()}
       />
+      <Modal
+        animationType="slice"
+        visible={modalVisibility}
+        onRequestClose={() => null}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text>Would you like to delete this Item?</Text>
+            <Text style={{ fontWeight: "bold" }}>{itemSelected?.value}</Text>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <CostumeButton
+                text="Cancel"
+                onPress={() => setModalVisibility(!modalVisibility)}
+                style={{ backgroundColor: "red", width: 100 }}
+              />
+              <CostumeButton
+                text="Delete"
+                onPress={() => onHandleDelete(itemSelected)}
+                style={{ width: 100, marginLeft: 15 }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -108,6 +151,36 @@ const styles = StyleSheet.create({
   },
   done: {
     textDecorationLine: "line-through",
+  },
+  item: {
+    fontSize: 14,
+    color: "#212121",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+    marginVertical: 100,
+  },
+  deleteBtn: {
+    color: "white",
+    fontWeight: "bold",
   },
 });
 

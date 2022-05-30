@@ -116,7 +116,11 @@ const App = () => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text>Would you like to delete this Item?</Text>
-            <Text style={{ fontWeight: "bold" }}>{itemSelected?.value}</Text>
+            <Text
+              style={{ fontWeight: "bold", marginTop: 20, marginBottom: 20 }}
+            >
+              {itemSelected?.value}
+            </Text>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
